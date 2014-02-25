@@ -4,6 +4,20 @@ EXAMPLES += examples/simple
 
 CFLAGS += -g -Wall -Ideps/libuv/include -Ideps/netmap/sys -Iinclude
 
+uname_S=$(shell uname -s)
+
+ifeq (Darwin, $(uname_S))
+  LDFLAGS += -framework CoreServices
+endif
+
+ifeq (Linux, $(uname_S))
+  LDFLAGS += -lc -lrt -ldl -lm -lpthread
+endif
+
+ifeq (SunOS, $(uname_S))
+  LDFLAGS += -lsendfile -lsocket -lkstat -lnsl -lm
+endif
+
 all: libuv_netmap.a
 
 src/%.o: src/%.c
@@ -21,6 +35,6 @@ clean:
 examples: libuv $(EXAMPLES)
 
 examples/%: examples/%.c libuv_netmap.a
-	$(CC) $(CFLAGS) -o $@ $< -L. -luv_netmap -Ldeps/libuv/.libs -luv
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< ./libuv_netmap.a deps/libuv/.libs/libuv.a
 
 .PHONY: all clean cleanall
