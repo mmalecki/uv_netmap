@@ -14,5 +14,5 @@ int main(int argc, char** argv) {
   int r = uv_netmap_open(loop, on_netmap_open);
   printf("getting netmap ring, status: %d\n", r);
 
-  uv_run(loop, UV_RUN_DEFAULT);
+  return uv_run(loop, UV_RUN_DEFAULT);
 }
