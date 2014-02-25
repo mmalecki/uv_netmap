@@ -16,11 +16,11 @@ libuv:
 	$(MAKE) -C deps/libuv/
 
 clean:
-	rm -f libuv_netmap.a $(OBJS)
+	rm -f libuv_netmap.a $(OBJS) $(EXAMPLES)
 
 examples: libuv $(EXAMPLES)
 
 examples/%: examples/%.c libuv_netmap.a
-	$(CC) -L. -luv_netmap -Ldeps/libuv/.libs -luv $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) -o $@ $< -L. -luv_netmap -Ldeps/libuv/.libs -luv
 
 .PHONY: all clean cleanall
